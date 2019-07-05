@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Confluent.Kafka;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace Bimbrownia.AI.ControlPanel
         public static async Task Main(string[] args)
         {
             Console.Title = "Control Panel";
+
             while (running)
             {
                 RenderMenu();
@@ -31,18 +33,16 @@ namespace Bimbrownia.AI.ControlPanel
         private static void RenderMenu()
         {
             Console.WriteLine($"----------BIMBROWNIA AI----------{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}");
-            Console.WriteLine($"Systems status:");
-            Console.WriteLine($"Stills running: TODO");
+            Console.WriteLine($"Stills running: {stills.Count}");
             Console.WriteLine(Environment.NewLine);
-            Console.WriteLine($"1: Add new still");
-            Console.WriteLine($"2: Add 10 new stills");
-            Console.WriteLine($"3: Add 100 new stills");
-            Console.WriteLine($"4: Add 1000 new stills");
-            Console.WriteLine($"5: Disable still");
-            Console.WriteLine($"6: Disable 10 stills");
-            Console.WriteLine($"7: Disable 100 stills");
-            Console.WriteLine($"8: Disable 1000 stills");
-            Console.WriteLine($"0: Run police scanner");
+            Console.WriteLine("1: Add new still");
+            Console.WriteLine("2: Add 10 new stills");
+            Console.WriteLine("3: Add 100 new stills");
+            Console.WriteLine("4: Disable still");
+            Console.WriteLine("5: Disable 10 stills");
+            Console.WriteLine("6: Disable 100 stills");
+            Console.WriteLine("7: Disable 1000 stills");
+            Console.WriteLine("0: Run police scanner");
             Console.WriteLine($"{quitButton}: Quit");
         }
 
@@ -60,19 +60,16 @@ namespace Bimbrownia.AI.ControlPanel
                     AddStills(100);
                     break;
                 case ConsoleKey.D4:
-                    AddStills(1000);
+                    await DisableStillsAsync(1);
                     break;
                 case ConsoleKey.D5:
-                    DisableStills(1);
+                    await DisableStillsAsync(10);
                     break;
                 case ConsoleKey.D6:
-                    DisableStills(10);
+                    await DisableStillsAsync(100);
                     break;
                 case ConsoleKey.D7:
-                    DisableStills(100);
-                    break;
-                case ConsoleKey.D8:
-                    DisableStills(1000);
+                    await DisableStillsAsync(1000);
                     break;
                 case ConsoleKey.D0:
                     //TODO: 
@@ -90,13 +87,13 @@ namespace Bimbrownia.AI.ControlPanel
             Console.Clear();
         }
 
-        private static void DisableStills(int stillsNumber)
+        private static async Task DisableStillsAsync(int stillsNumber)
         {
             for (int i = 0; i < stillsNumber; i++)
             {
                 if (stills.TryDequeue(out Still still))
                 {
-                    still.DisableAsync();
+                    await still.DisableAsync();
                     //TODO: raise still disabled event
                 }
             }

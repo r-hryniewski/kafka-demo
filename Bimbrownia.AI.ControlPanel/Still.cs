@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Bimbrownia.AI.Shared;
+using Confluent.Kafka;
+using Newtonsoft.Json;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +13,8 @@ namespace Bimbrownia.AI.ControlPanel
         private CancellationTokenSource Cts { get; set; }
         private Task Task { get; set; }
 
+        private static readonly Random r = new Random();
+
         public Still()
         {
             Id = Guid.NewGuid();
@@ -19,24 +24,37 @@ namespace Bimbrownia.AI.ControlPanel
         {
             Cts = new CancellationTokenSource();
 
-            Task = Task.Run(
-                action: async () =>
-                {
-                    while (!Cts.Token.IsCancellationRequested)
-                    {
-                        await Console.Out.WriteAsync($"Still runing: {Id}");
-                        await Task.Delay(500);
-                    }
-                },
+            var stillStartedEvent = new StillStartedEvent(Id);
+            Kafka.ProduceEventAsJson(Constants.TopicName_StillStarted, stillStartedEvent);
+
+            Task = Task.Run<Task>(
+                function: ProduceRandomSensorData,
                 cancellationToken: Cts.Token);
         }
 
         internal async Task DisableAsync()
         {
             Cts.Cancel();
-            await Task.FromCanceled(Cts.Token);
+            await Task;
             Task.Dispose();
-            Cts.Dispose();
+
+            var stillDisabledEvent = new StillDisabledEvent(Id);
+            Kafka.ProduceEventAsJson(Constants.TopicName_StillDisabled, stillDisabledEvent);
+        }
+
+        private async Task ProduceRandomSensorData()
+        {
+            while (!Cts.Token.IsCancellationRequested)
+            {
+                Kafka.ProduceEventAsJson(Constants.TopicName_StillPing, new StillPingEvent(Id));
+
+                var randomTemperature = Temperatures.TemperaturesValues[r.Next(0, Temperatures.TemperaturesValues.Length)];
+
+                Kafka.ProduceEventAsJson(topicName: Constants.TopicName_TemperatureSensor1,
+                    ev: new TemperatureReadEvent(Id, randomTemperature));
+
+                await Task.Delay(500);
+            }
         }
     }
 }

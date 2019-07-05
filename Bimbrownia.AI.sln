@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bimbrownia.AI.ControlPanel"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bimbrownia.AI.Shared", "Bimbrownia.AI.Shared\Bimbrownia.AI.Shared.csproj", "{A96004A2-4FEB-42EA-AC81-ADB553E7072D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bimbrownia.AI.StatusMonitor", "Bimbrownia.AI.StatusMonitor\Bimbrownia.AI.StatusMonitor.csproj", "{26C57E5F-AA5E-4A07-8E6C-BD31C6A42AC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bimbrownia.AI.SensorMonitor", "Bimbrownia.AI.SensorMonitor\Bimbrownia.AI.SensorMonitor.csproj", "{117E7E55-0812-4ED8-A0DB-D5A28E364F4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bimbrownia.AI.PoliceDetector", "Bimbrownia.AI.PoliceDetector\Bimbrownia.AI.PoliceDetector.csproj", "{B5670FEF-CDB3-4DE3-A791-92D420880AF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bimbrownia.AI.AlertsMonitor", "Bimbrownia.AI.AlertsMonitor\Bimbrownia.AI.AlertsMonitor.csproj", "{A1D924C8-C1A6-49DE-8158-B9418446EB96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +29,22 @@ Global
 		{A96004A2-4FEB-42EA-AC81-ADB553E7072D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A96004A2-4FEB-42EA-AC81-ADB553E7072D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A96004A2-4FEB-42EA-AC81-ADB553E7072D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26C57E5F-AA5E-4A07-8E6C-BD31C6A42AC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26C57E5F-AA5E-4A07-8E6C-BD31C6A42AC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26C57E5F-AA5E-4A07-8E6C-BD31C6A42AC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26C57E5F-AA5E-4A07-8E6C-BD31C6A42AC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{117E7E55-0812-4ED8-A0DB-D5A28E364F4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{117E7E55-0812-4ED8-A0DB-D5A28E364F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{117E7E55-0812-4ED8-A0DB-D5A28E364F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{117E7E55-0812-4ED8-A0DB-D5A28E364F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5670FEF-CDB3-4DE3-A791-92D420880AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5670FEF-CDB3-4DE3-A791-92D420880AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5670FEF-CDB3-4DE3-A791-92D420880AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5670FEF-CDB3-4DE3-A791-92D420880AF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D924C8-C1A6-49DE-8158-B9418446EB96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D924C8-C1A6-49DE-8158-B9418446EB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D924C8-C1A6-49DE-8158-B9418446EB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D924C8-C1A6-49DE-8158-B9418446EB96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
