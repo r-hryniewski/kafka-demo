@@ -7,6 +7,6 @@ namespace Bimbrownia.AI.Shared
 {
     public class Temperatures
     {
-        public static readonly int[] TemperaturesValues = Enumerable.Range(60, 50).ToArray();
+        public static readonly int[] TemperaturesValues = Enumerable.Range(55, 50).ToArray();
     }
 }

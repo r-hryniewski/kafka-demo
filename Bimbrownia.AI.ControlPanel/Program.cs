@@ -18,6 +18,13 @@ namespace Bimbrownia.AI.ControlPanel
 
         private static readonly Queue<Still> stills = new Queue<Still>();
 
+        public static readonly ConsumerConfig ConsumerConfig = new ConsumerConfig
+        {
+            GroupId = nameof(Bimbrownia.AI.ControlPanel),
+            BootstrapServers = "localhost:9092",
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
+
         public static async Task Main(string[] args)
         {
             Console.Title = "Control Panel";
@@ -94,7 +101,6 @@ namespace Bimbrownia.AI.ControlPanel
                 if (stills.TryDequeue(out Still still))
                 {
                     await still.DisableAsync();
-                    //TODO: raise still disabled event
                 }
             }
         }
@@ -107,7 +113,6 @@ namespace Bimbrownia.AI.ControlPanel
                 still.Run();
 
                 stills.Enqueue(still);
-                //TODO: raise still created event
             }
         }
     }

@@ -13,12 +13,6 @@ namespace Bimbrownia.AI.Shared
         {
             BootstrapServers = "localhost:9092"
         };
-        public static readonly ConsumerConfig ConsumerConfig = new ConsumerConfig
-        {
-            GroupId = "Bimbrownia.AI",
-            BootstrapServers = "localhost:9092",
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
 
 
         public static readonly IProducer<Null, string> JsonMsgProducer = new ProducerBuilder<Null, string>(ProducerConfig).Build();

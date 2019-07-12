@@ -12,6 +12,13 @@ namespace Bimbrownia.AI.StatusMonitor
 {
     class Program
     {
+        public static readonly ConsumerConfig ConsumerConfig = new ConsumerConfig
+        {
+            GroupId = nameof(Bimbrownia.AI.StatusMonitor),
+            BootstrapServers = "localhost:9092",
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
+
         private static readonly ConcurrentDictionary<Guid, StillStatus> stillStatusDictionary = new ConcurrentDictionary<Guid, StillStatus>();
         static async Task Main(string[] args)
         {
@@ -30,7 +37,7 @@ namespace Bimbrownia.AI.StatusMonitor
         }
         private static async Task MonitorStillStarted()
         {
-            using (var c = new ConsumerBuilder<Ignore, string>(Kafka.ConsumerConfig).Build())
+            using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
                 c.Subscribe(Constants.TopicName_StillStarted);
 
@@ -67,7 +74,7 @@ namespace Bimbrownia.AI.StatusMonitor
 
         private static async Task MonitorStillDisabled()
         {
-            using (var c = new ConsumerBuilder<Ignore, string>(Kafka.ConsumerConfig).Build())
+            using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
                 c.Subscribe(Constants.TopicName_StillDisabled);
 
@@ -104,7 +111,7 @@ namespace Bimbrownia.AI.StatusMonitor
 
         private static async Task MonitorStillPing()
         {
-            using (var c = new ConsumerBuilder<Ignore, string>(Kafka.ConsumerConfig).Build())
+            using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
                 c.Subscribe(Constants.TopicName_StillPing);
 

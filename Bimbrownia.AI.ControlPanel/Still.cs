@@ -13,11 +13,14 @@ namespace Bimbrownia.AI.ControlPanel
         private CancellationTokenSource Cts { get; set; }
         private Task Task { get; set; }
 
-        private static readonly Random r = new Random();
+        public bool GasTankIsEmpty => gasCapacity <= 0;
+
+        private int gasCapacity;
 
         public Still()
         {
             Id = Guid.NewGuid();
+            gasCapacity = 100;
         }
 
         internal void Run()
@@ -44,16 +47,36 @@ namespace Bimbrownia.AI.ControlPanel
 
         private async Task ProduceRandomSensorData()
         {
+            int iterationsToRefill = 10;
             while (!Cts.Token.IsCancellationRequested)
             {
+                if (!GasTankIsEmpty)
+                    gasCapacity -= 1;
+
                 Kafka.ProduceEventAsJson(Constants.TopicName_StillPing, new StillPingEvent(Id));
 
-                var randomTemperature = Temperatures.TemperaturesValues[r.Next(0, Temperatures.TemperaturesValues.Length)];
+                var r = new Random();
 
-                Kafka.ProduceEventAsJson(topicName: Constants.TopicName_TemperatureSensor1,
-                    ev: new TemperatureReadEvent(Id, randomTemperature));
+                var randomMashTemperature = Temperatures.TemperaturesValues[r.Next(0, Temperatures.TemperaturesValues.Length)];
+                var randomDistillateTemperature = Temperatures.TemperaturesValues[r.Next(0, Temperatures.TemperaturesValues.Length)];
 
-                await Task.Delay(500);
+
+
+                Kafka.ProduceEventAsJson(topicName: Constants.TopicName_StillSensorRead,
+                    ev: new StillSensorReadEvent(Id, randomMashTemperature, randomDistillateTemperature, gasCapacity));
+
+                await Task.Delay(1000);
+
+                if (GasTankIsEmpty)
+                {
+                    iterationsToRefill -= 1;
+
+                    if (iterationsToRefill <= 0)
+                    {
+                        gasCapacity = 100;
+                        iterationsToRefill = 10;
+                    }
+                }
             }
         }
     }

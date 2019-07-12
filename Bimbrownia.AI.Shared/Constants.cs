@@ -4,7 +4,7 @@ namespace Bimbrownia.AI.Shared
 {
     public class Constants
     {
-        public const string TopicName_TemperatureSensor1 = nameof(TopicName_TemperatureSensor1);
+        public const string TopicName_StillSensorRead = nameof(TopicName_StillSensorRead);
 
         public const string TopicName_StillStarted = nameof(TopicName_StillStarted);
         public const string TopicName_StillDisabled = nameof(TopicName_StillDisabled);
