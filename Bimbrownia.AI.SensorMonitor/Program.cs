@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Bimbrownia.AI.SensorMonitor
 {
-    class Program
+    internal class Program
     {
         public static readonly ConsumerConfig ConsumerConfig = new ConsumerConfig
         {
@@ -20,7 +20,7 @@ namespace Bimbrownia.AI.SensorMonitor
 
         private static readonly ConcurrentDictionary<Guid, StillSensorData> sensorDataDictionary = new ConcurrentDictionary<Guid, StillSensorData>();
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Console.Title = "Sensor Monitor";
 
@@ -121,7 +121,7 @@ namespace Bimbrownia.AI.SensorMonitor
         {
             sensorDataDictionary.TryAdd(ev.StillId, new StillSensorData(ev.StillId));
 
-            if(sensorDataDictionary.TryGetValue(ev.StillId, out var item) && !item.Disabled)
+            if (sensorDataDictionary.TryGetValue(ev.StillId, out var item) && !item.Disabled)
             {
                 item.ProcessSensorReading(ev.MashTemperatureReading, ev.DistillateTemperatureReading, ev.GasCapacityPercentage);
             }
@@ -143,11 +143,23 @@ namespace Bimbrownia.AI.SensorMonitor
                     Console.WriteLine($"Still with id: {sensorData.StillId}. Avg. mash temp: {sensorData.AverageMashTemperatureReading} C°. Avg. distillate temp: {sensorData.AverageDistillateTemperatureReading} C°. Gas cpty.: {sensorData.LastGasCapacityPercentage}%");
                     Console.WriteLine("----------");
 
-                    //TODO: Send alerts
-                    if (sensorData.HasRealiableReadings && (sensorData.AverageDistillateTemperatureReading > 95 || sensorData.AverageMashTemperatureReading > 95))
+                    if (sensorData.HasRealiableReadings)
                     {
-                        
-
+                        if (sensorData.AverageDistillateTemperatureReading > 95)
+                        {
+                            Kafka.ProduceEventAsJson(topicName: Constants.TopicName_DangerousDistilateTemperature,
+                                ev: new DangerousDistillateAvgTemperatureEvent(sensorData.StillId, sensorData.AverageDistillateTemperatureReading));
+                        }
+                        if (sensorData.AverageMashTemperatureReading > 95)
+                        {
+                            Kafka.ProduceEventAsJson(topicName: Constants.TopicName_DangerousMashTemperature,
+                                ev: new DangerousMashAvgTemperatureEvent(sensorData.StillId, sensorData.AverageMashTemperatureReading));
+                        }
+                        if (sensorData.LastGasCapacityPercentage <= 0)
+                        {
+                            Kafka.ProduceEventAsJson(topicName: Constants.TopicName_GasTankIsEmpty,
+                                ev: new GasTankIsEmptyEvent(sensorData.StillId));
+                        }
                     }
                 }
             }

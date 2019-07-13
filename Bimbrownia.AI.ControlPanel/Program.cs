@@ -8,11 +8,6 @@ namespace Bimbrownia.AI.ControlPanel
     internal class Program
     {
         private const ConsoleKey quitButton = ConsoleKey.Q;
-        private const ConsoleKey temperatureProducer1Button = ConsoleKey.D1;
-        private const ConsoleKey temperatureProducer2Button = ConsoleKey.D2;
-        private const ConsoleKey capacityProducer1Button = ConsoleKey.D3;
-        private const ConsoleKey capacityProducer2Button = ConsoleKey.D4;
-        private const ConsoleKey policeDetectorButton = ConsoleKey.D5;
 
         private static bool running = true;
 

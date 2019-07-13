@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bimbrownia.AI.AlertsMonitor
 {
-    class Program
+    internal class Program
     {
         public static readonly ConsumerConfig ConsumerConfig = new ConsumerConfig
         {
@@ -16,15 +16,134 @@ namespace Bimbrownia.AI.AlertsMonitor
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Console.Title = "Alerts Monitor";
             Console.WriteLine($"----------BIMBROWNIA AI----------{Environment.NewLine}{Environment.NewLine}{Environment.NewLine}");
 
             Task.Run(MonitorStillStarted);
             Task.Run(MonitorStillDisabled);
+            Task.Run(MonitorDangerousDistillateAvgTemperature);
+            Task.Run(MonitorDangerousMashAvgTemperature);
+            Task.Run(MonitorGasTankIsEmpty);
 
             Console.ReadLine();
+        }
+
+        private static void MonitorDangerousDistillateAvgTemperature()
+        {
+            using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
+            {
+                c.Subscribe(Constants.TopicName_DangerousDistilateTemperature);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (_, e) =>
+                {
+                    e.Cancel = true;
+                    cts.Cancel();
+                };
+
+                try
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            var cr = c.Consume(cts.Token);
+
+                            var ev = JsonConvert.DeserializeObject<DangerousDistillateAvgTemperatureEvent>(cr.Value);
+                            HandleDangerousDistillateAvgTemperatureEvent(ev);
+                        }
+                        catch (ConsumeException e)
+                        {
+                            Console.WriteLine($"Error occured: {e.Error.Reason}");
+                        }
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    c.Close();
+                }
+            }
+        }
+
+        private static void HandleDangerousDistillateAvgTemperatureEvent(DangerousDistillateAvgTemperatureEvent ev)
+        {
+            Misc.WriteLineInColor($"{DateTime.Now:yyyy/MM/dd hh:mm:ss.fff}: Still with id {ev.StillId} detected dangerous distillate temperature of: {ev.AverageDistillateTemperature} C°", ConsoleColor.DarkYellow);
+        }
+
+        private static void MonitorGasTankIsEmpty()
+        {
+            using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
+            {
+                c.Subscribe(Constants.TopicName_GasTankIsEmpty);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (_, e) =>
+                {
+                    e.Cancel = true;
+                    cts.Cancel();
+                };
+
+                try
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            var cr = c.Consume(cts.Token);
+
+                            var ev = JsonConvert.DeserializeObject<GasTankIsEmptyEvent>(cr.Value);
+                            HandleGasTankIsEmptyEvent(ev);
+                        }
+                        catch (ConsumeException e)
+                        {
+                            Console.WriteLine($"Error occured: {e.Error.Reason}");
+                        }
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    c.Close();
+                }
+            }
+        }
+
+        private static void MonitorDangerousMashAvgTemperature()
+        {
+            using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
+            {
+                c.Subscribe(Constants.TopicName_DangerousMashTemperature);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                Console.CancelKeyPress += (_, e) =>
+                {
+                    e.Cancel = true;
+                    cts.Cancel();
+                };
+
+                try
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            var cr = c.Consume(cts.Token);
+
+                            var ev = JsonConvert.DeserializeObject<DangerousMashAvgTemperatureEvent>(cr.Value);
+                            HandleDangerousMashAvgTemperatureEvent(ev);
+                        }
+                        catch (ConsumeException e)
+                        {
+                            Console.WriteLine($"Error occured: {e.Error.Reason}");
+                        }
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    c.Close();
+                }
+            }
         }
 
         private static void MonitorStillStarted()
@@ -101,6 +220,11 @@ namespace Bimbrownia.AI.AlertsMonitor
             }
         }
 
+        private static void HandleDangerousMashAvgTemperatureEvent(DangerousMashAvgTemperatureEvent ev)
+        {
+            Misc.WriteLineInColor($"{DateTime.Now:yyyy/MM/dd hh:mm:ss.fff}: Still with id {ev.StillId} detected dangerous mash temperature of: {ev.AverageMashTemperature} C°", ConsoleColor.DarkYellow);
+        }
+
         private static void HandleStillStartedEvent(StillStartedEvent ev)
         {
             Misc.WriteLineInColor($"{DateTime.Now:yyyy/MM/dd hh:mm:ss.fff}: Still with id {ev.StillId} started at {ev.Occured:yyyy/MM/dd hh:mm:ss.fff}", ConsoleColor.Green);
@@ -109,6 +233,11 @@ namespace Bimbrownia.AI.AlertsMonitor
         private static void HandleStillDisabledEvent(StillDisabledEvent ev)
         {
             Misc.WriteLineInColor($"{DateTime.Now:yyyy/MM/dd hh:mm:ss.fff}: Still with id {ev.StillId} disabled at {ev.Occured:yyyy/MM/dd hh:mm:ss.fff}", ConsoleColor.Red);
+        }
+
+        private static void HandleGasTankIsEmptyEvent(GasTankIsEmptyEvent ev)
+        {
+            Misc.WriteLineInColor($"{DateTime.Now:yyyy/MM/dd hh:mm:ss.fff}: Still with id {ev.StillId} detected empty gas tank.", ConsoleColor.DarkCyan);
         }
     }
 }
