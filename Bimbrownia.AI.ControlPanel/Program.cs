@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using Bimbrownia.AI.Shared;
+using Confluent.Kafka;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -74,8 +75,7 @@ namespace Bimbrownia.AI.ControlPanel
                     await DisableStillsAsync(1000);
                     break;
                 case ConsoleKey.D0:
-                    //TODO: 
-                    Console.WriteLine("TODO");
+                    DetectPolice();
                     break;
                 case quitButton:
                     running = false;
@@ -87,6 +87,23 @@ namespace Bimbrownia.AI.ControlPanel
             }
 
             Console.Clear();
+        }
+
+        private static void DetectPolice()
+        {
+            Task.Run(async () =>
+            {
+                var r = new Random();
+                while (true)
+                {
+                    var randomNumber = r.Next();
+
+                    if (randomNumber % 10 == 0)
+                        Kafka.ProduceEventAsJson(nameof(PoliceDetectedEvent), new PoliceDetectedEvent(Guid.NewGuid()));
+
+                    await Task.Delay(500);
+                }
+            });
         }
 
         private static async Task DisableStillsAsync(int stillsNumber)
