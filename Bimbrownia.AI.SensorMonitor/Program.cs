@@ -39,7 +39,7 @@ namespace Bimbrownia.AI.SensorMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillSensorRead);
+                c.Subscribe(nameof(StillSensorReadEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -76,7 +76,7 @@ namespace Bimbrownia.AI.SensorMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillDisabled);
+                c.Subscribe(nameof(StillDisabledEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -147,17 +147,17 @@ namespace Bimbrownia.AI.SensorMonitor
                     {
                         if (sensorData.AverageDistillateTemperatureReading > 95)
                         {
-                            Kafka.ProduceEventAsJson(topicName: Constants.TopicName_DangerousDistilateTemperature,
+                            Kafka.ProduceEventAsJson(topicName: nameof(DangerousDistillateAvgTemperatureEvent),
                                 ev: new DangerousDistillateAvgTemperatureEvent(sensorData.StillId, sensorData.AverageDistillateTemperatureReading));
                         }
                         if (sensorData.AverageMashTemperatureReading > 95)
                         {
-                            Kafka.ProduceEventAsJson(topicName: Constants.TopicName_DangerousMashTemperature,
+                            Kafka.ProduceEventAsJson(topicName: nameof(DangerousMashAvgTemperatureEvent),
                                 ev: new DangerousMashAvgTemperatureEvent(sensorData.StillId, sensorData.AverageMashTemperatureReading));
                         }
                         if (sensorData.LastGasCapacityPercentage <= 0)
                         {
-                            Kafka.ProduceEventAsJson(topicName: Constants.TopicName_GasTankIsEmpty,
+                            Kafka.ProduceEventAsJson(topicName: nameof(GasTankIsEmptyEvent),
                                 ev: new GasTankIsEmptyEvent(sensorData.StillId));
                         }
                     }

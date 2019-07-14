@@ -39,7 +39,7 @@ namespace Bimbrownia.AI.StatusMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillStarted);
+                c.Subscribe(nameof(StillStartedEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -76,7 +76,7 @@ namespace Bimbrownia.AI.StatusMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillDisabled);
+                c.Subscribe(nameof(StillDisabledEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -113,7 +113,7 @@ namespace Bimbrownia.AI.StatusMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillPing);
+                c.Subscribe(nameof(StillPingEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>

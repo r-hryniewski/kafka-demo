@@ -34,7 +34,7 @@ namespace Bimbrownia.AI.AlertsMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_DangerousDistilateTemperature);
+                c.Subscribe(nameof(DangerousDistillateAvgTemperatureEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -76,7 +76,7 @@ namespace Bimbrownia.AI.AlertsMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_GasTankIsEmpty);
+                c.Subscribe(nameof(GasTankIsEmptyEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -113,7 +113,7 @@ namespace Bimbrownia.AI.AlertsMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_DangerousMashTemperature);
+                c.Subscribe(nameof(DangerousMashAvgTemperatureEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -150,7 +150,7 @@ namespace Bimbrownia.AI.AlertsMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillStarted);
+                c.Subscribe(nameof(StillStartedEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
@@ -187,7 +187,7 @@ namespace Bimbrownia.AI.AlertsMonitor
         {
             using (var c = new ConsumerBuilder<Ignore, string>(ConsumerConfig).Build())
             {
-                c.Subscribe(Constants.TopicName_StillDisabled);
+                c.Subscribe(nameof(StillDisabledEvent));
 
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>

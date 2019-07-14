@@ -28,7 +28,7 @@ namespace Bimbrownia.AI.ControlPanel
             Cts = new CancellationTokenSource();
 
             var stillStartedEvent = new StillStartedEvent(Id);
-            Kafka.ProduceEventAsJson(Constants.TopicName_StillStarted, stillStartedEvent);
+            Kafka.ProduceEventAsJson(nameof(StillStartedEvent), stillStartedEvent);
 
             Task = Task.Run<Task>(
                 function: ProduceRandomSensorData,
@@ -42,7 +42,7 @@ namespace Bimbrownia.AI.ControlPanel
             Task.Dispose();
 
             var stillDisabledEvent = new StillDisabledEvent(Id);
-            Kafka.ProduceEventAsJson(Constants.TopicName_StillDisabled, stillDisabledEvent);
+            Kafka.ProduceEventAsJson(nameof(StillDisabledEvent), stillDisabledEvent);
         }
 
         private async Task ProduceRandomSensorData()
@@ -53,7 +53,7 @@ namespace Bimbrownia.AI.ControlPanel
                 if (!GasTankIsEmpty)
                     gasCapacity -= 1;
 
-                Kafka.ProduceEventAsJson(Constants.TopicName_StillPing, new StillPingEvent(Id));
+                Kafka.ProduceEventAsJson(nameof(StillPingEvent), new StillPingEvent(Id));
 
                 var r = new Random();
 
@@ -62,7 +62,7 @@ namespace Bimbrownia.AI.ControlPanel
 
 
 
-                Kafka.ProduceEventAsJson(topicName: Constants.TopicName_StillSensorRead,
+                Kafka.ProduceEventAsJson(topicName: nameof(StillSensorReadEvent),
                     ev: new StillSensorReadEvent(Id, randomMashTemperature, randomDistillateTemperature, gasCapacity));
 
                 await Task.Delay(1000);
